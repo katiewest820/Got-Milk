@@ -3,18 +3,14 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
 
-const router = express.Router();
-router.route('/hello')
-	.get(function (req, res){
-		res.send('Hello World');	
-	}); 
 
 
+const shoppingItemRoute = require('./routes/shoppingitem');
 
 app.all('/');
-app.use('/', router)
+app.use('/item', shoppingItemRoute);
 
-app.listen(3000, function(){
+app.listen(8080, function(){
 	console.log("I\"m working");
 });
 
