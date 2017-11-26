@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Shopping List Frontend</title>
-	<link rel="stylesheet" type="text/css" href="index.css">
-</head>
-<body>
-	<section>
-		<h1>My Shopping List</h1>
-		<div class ="shoppingList"></div>
 
-		<div class="addNewItems">			
-				<input class="inputDataItem" type="text">
-				<input class="inputDataQuantity" type="text">
-				<button class="submitButton" type="submit">Submit</button>			
-		</div>
-	</section>
-<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>	
-<script type="text/javascript" src ="index.js"></script>
+<head>
+    <title>Shopping List Frontend</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="https://use.fontawesome.com/c2297dc75f.js"></script>
+</head>
+
+<body>
+    <section class="createNewList">
+        <label>New List Name
+            <input class="inputDataListName" type="text">
+        </label>
+        <button class="newListButton">
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+        </button>
+        <div class="apiListName">
+        </div>
+    </section>
+    <section class="shoppingListItems">
+        
+        <div class="shoppingList">
+        </div>
+        <div class="addNewItems">
+            <input class="inputDataItem" type="text">
+            <input class="inputDataQuantity" type="text">
+            <button class="submitButton" type="submit">Submit</button>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="index.js"></script>
 </body>
+
 </html>

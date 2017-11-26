@@ -26,8 +26,9 @@ router.route('/')
 
     .post(function(req, res) {
         let newShoppingItem = new shoppingItemModel();
-        newShoppingItem.item = req.body.item;
-        newShoppingItem.quantity = req.body.quantity;
+        newShoppingItem.listName = req.body.listName;
+        newShoppingItem.item.push(req.body.item);
+        newShoppingItem.quantity.push(req.body.quantity);
 
         newShoppingItem.save()
             .then(function() {
@@ -56,24 +57,45 @@ router.route('/id/:id')
     })
     .delete(function(req, res) {
         shoppingItemModel.findByIdAndRemove(req.params.id)
-        .then(function(item){
-            res.status(201).send(`your ${item.item} was removed`)
-        })
-    })
-
-router.route('/item/:item')
-    .get(function(req, res) {
-        let myItem = req.params.item;
-        shoppingItemModel.find({ item: new RegExp('^' + myItem + '*', "i") })
-            .then(function(items) {
-                res.status(200).json(items);
-            })
-            .catch(function() {
-                console.log('inside of catch');
-                res.status(500).send('Something happened');
+            .then(function(item) {
+                res.status(201).send(`your ${item.item} was removed`)
             })
     })
 
+// router.route('/item/:item')
+//     .get(function(req, res) {
+//         let myItem = req.params.item;
+//         shoppingItemModel.find({ item: new RegExp('^' + myItem + '*', "i") })
+//             .then(function(items) {
+//                 res.status(200).json(items);
+//             })
+//             .catch(function() {
+//                 console.log('inside of catch');
+//                 res.status(500).send('Something happened');
+//             })
+//     })
+
+router.route('/id/:id')
+    .put(function(req, res) {
+            let editOptions = ['item', 'quantity'];
+            let editField = {};
+
+            editOptions.forEach((field) => {
+                if (field in req.body) {
+                    editField[field] = req.body[field]
+                }
+            });
+            shoppingItemModel.findByIdAndUpdate(req.params.id, { $set: editField }, { new: true })
+                .then((item) => {
+                    console.log('put successful')
+                    res.status(200).json(item);
+                })
+
+                .catch(() => {
+                    console.log('inside of catch');
+                    res.status(400).send('something bad happened')
+                })
 
 
-module.exports = router;
+    });            
+            module.exports = router;

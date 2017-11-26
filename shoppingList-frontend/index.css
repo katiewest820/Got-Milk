@@ -1,5 +1,17 @@
-body{
+body, section{
 	height:1000px;
-	width:1000px;
+	width: 100%
 	background-color: green;
+}
+
+.
+
+.shoppingListItems{
+	display: none;
+}
+
+.apiListName a{
+	display: block;
+	height: 50px;
+	width: fit-content;
 }
