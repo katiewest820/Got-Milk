@@ -11,7 +11,7 @@ function showListNames() {
     $.get(`${myURL}item`, function(results, error) {
         console.log(results)
         results.forEach((item) => {
-            $('.apiListName').append(`<a href="#" class="${item._id}">${item.listName}</a>`)
+            $('.apiListName').append(`<div class="listNameRow"><i class="fa fa-trash deleteListName" aria-hidden="true" value="${item._id}"></i><a href="#" value="${item._id}" class="${item._id}">${item.listName}</a></div>`)
         });
     });
 }
@@ -22,19 +22,40 @@ function addListName() {
             listName: $('.inputDataListName').val()
         }
         $.ajax({
-                url: 'http://localhost:8081/item',
+                url: `${myURL}item`,
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(myListName)
             })
             .done(function() {
                 console.log('post successful')
+                document.getElementById('newList').reset()
                 showListNames();
 
 
             });
     });
 };
+
+function deleteListName(){
+    $('.apiListName').on('click', '.deleteListName', function(){
+        let myId = $(this).attr('value')
+        console.log(myId)
+
+        $.ajax({
+            url: `${myURL}item/id/${myId}`,
+            type: 'DELETE'
+        })
+        .done(function(){
+            console.log('successful delete')
+            showListNames()
+        })
+        .fail(function(err){
+            console.log('something bad happened' + err)
+
+        })
+    })
+}
 
 function showListItems() {
     $('.apiListName').on('click', 'a', function() {
@@ -54,7 +75,7 @@ function getAllItems() {
         $('.shoppingList').empty();
         $('.createNewList').fadeOut();
         $('.shoppingListItems').fadeIn();
-        $('.shoppingList').append(`<h1>${myShoppingList.listName} Shopping List</h1>`)
+        $('.title').html(`<h1>${myShoppingList.listName} Shopping List</h1>`)
         let obj = myShoppingList.allItems
         for (x in obj) {
             
@@ -63,13 +84,14 @@ function getAllItems() {
            if(obj[x].checked == true){
             checked = 'checked'
            }
-           $('.shoppingList').append(`<div id='${obj[x]._id}'' class='${checked}'><p>Item: ${obj[x].item}</p><p>Quantity: ${obj[x].quantity}</p>
-                                        <button class="checkOff">Check off Item</button><button class="delete">Delete Item</button></div>`)
+           $('.shoppingList').append(`<div id='${obj[x]._id}' class='${checked}'><p>Item: ${obj[x].item}</p><p>Quantity: ${obj[x].quantity}</p>
+                                        <i class="fa fa-check fa-2x checkOff" aria-hidden="true"></i><i class="fa fa-trash fa-2x delete" aria-hidden="true"></i></div>`)
         }
 
     });
 
 };
+
 
 
 function addItem() {
@@ -88,6 +110,7 @@ function addItem() {
             })
             .done(function() {
                 console.log('post successful')
+                $('input[type="text"], textarea').val('')
                 getAllItems()
             })
             .fail(function(jqXHR, textStatus, err) {
@@ -100,7 +123,7 @@ function addItem() {
 function deleteItem() {
     $('.shoppingList').on('click', '.delete',  function() {
         let parentId = myShoppingList._id
-        let itemId = $(this).parent().attr('class')
+        let itemId = $(this).parent().attr('id')
         console.log(itemId)
         $.ajax({
                  url: `${myURL}item/id/${parentId}/${itemId}`,
@@ -143,9 +166,23 @@ function checkOffListItem(){
     });
 }
 
+function backToLists(){
+    $('.back').on('click', function(){
+        myShoppingList = ' ';
+        myShoppingItems = ' ';
+        myVal = ' ';
+        $('.shoppingListItems').fadeOut();
+        $('.createNewList').fadeIn();
+        showListNames()
+    })
+}
+
 deleteItem()
 addItem()
 showListNames()
 showListItems()
 addListName()
 checkOffListItem()
+backToLists()
+
+deleteListName()

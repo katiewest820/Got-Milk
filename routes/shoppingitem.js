@@ -56,9 +56,22 @@ router.route('/id/:id')
 
     });
 
+router.delete('/id/:id', (req, res) => {
+    console.log('found me')
+    shoppingLocation.findByIdAndRemove(req.params.id)
+        .then((item) => {
+            console.log('inside of delete then')
+            res.send('delete successful').status(201)
+        })
+        .catch((err) => {
+            console.log('something bad happened:' + JSON.stringify(err))
+            res.status(400).send('something bad happened:' + JSON.stringify(err))
+        })
+})
+
 router.delete('/id/:shoppingLocationId/:id', (req, res) => {
     shoppingLocation.findById(req.params.shoppingLocationId)
-        .then(function(item) {
+        .then((item) => {
             console.log(item.allItems)
             let myId = req.params.id;
             item.allItems = item.allItems.filter(newArr => newArr._id != myId);
@@ -71,6 +84,8 @@ router.delete('/id/:shoppingLocationId/:id', (req, res) => {
             res.status(400).send('something bad happened' + err)
         })
 });
+
+
 
 router.route('/id/:id')
     .post(function(req, res) {

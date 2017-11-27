@@ -4,29 +4,45 @@
 <head>
     <title>Shopping List Frontend</title>
     <link rel="stylesheet" type="text/css" href="index.css">
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://use.fontawesome.com/c2297dc75f.js"></script>
 </head>
 
 <body>
     <section class="createNewList">
-        <label>New List Name
-            <input class="inputDataListName" type="text">
-        </label>
-        <button class="newListButton">
-            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
-        </button>
+        
+            <form id="newList">
+                <label>New List Name:</label>
+                <input class="inputDataListName" type="text">
+                <i class="fa fa-plus fa-2x newListButton" aria-hidden="true"></i>
+            </form>
+            <!--<button class="newListButton"></button>-->
+            
+       
         <div class="apiListName">
         </div>
     </section>
     <section class="shoppingListItems">
         
+        
+        <div class="addNewItems">
+            <div class="title"></div>
+            <div id="inputBox">
+                
+                    <label>Item
+                        <input class="inputDataItem" type="text" name="Item">
+                    </label>
+                    <label>Quantity
+                        <input class="inputDataQuantity" type="text" name="quantity">
+                    </label>
+                    <button class="submitButton">Submit</button>
+                
+            </div>
+        </div>
         <div class="shoppingList">
         </div>
-        <div class="addNewItems">
-            <input class="inputDataItem" type="text">
-            <input class="inputDataQuantity" type="text">
-            <button class="submitButton" type="submit">Submit</button>
-        </div>
+        <div><button class="back">Back to Lists</button></div>
     </section>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="index.js"></script>
