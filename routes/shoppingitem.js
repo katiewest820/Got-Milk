@@ -1,6 +1,6 @@
 const express = require('express');
-const shoppingItemModel = require('../model');
-
+const { shoppingList, shoppingLocation } = require('../model');
+//const shoppingList = require('../model')
 const router = express.Router();
 
 // router.use(function(req, res, next) { console.log("route middleware");
@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.route('/')
     .get(function(req, res) {
-        shoppingItemModel.find({})
+        shoppingLocation.find({})
             .then(function(items) {
                 res.status(200).json(items);
 
@@ -25,12 +25,12 @@ router.route('/')
     })
 
     .post(function(req, res) {
-        let newShoppingItem = new shoppingItemModel();
-        newShoppingItem.listName = req.body.listName;
-        newShoppingItem.item.push(req.body.item);
-        newShoppingItem.quantity.push(req.body.quantity);
+        let newShoppingLocation = new shoppingLocation();
+        newShoppingLocation.listName = req.body.listName;
+        //newShoppingItem.item.push(req.body.item);
+        //newShoppingItem.quantity.push(req.body.quantity);
 
-        newShoppingItem.save()
+        newShoppingLocation.save()
             .then(function() {
                 console.log('inside of then');
                 res.status(200).send("Item saved");
@@ -45,7 +45,7 @@ router.route('/')
 router.route('/id/:id')
     .get(function(req, res) {
         let myId = req.params.id;
-        shoppingItemModel.findById(myId)
+        shoppingLocation.findById(myId)
             .then(function(item) {
                 res.status(200).json(item);
             })
@@ -54,48 +54,78 @@ router.route('/id/:id')
                 res.status(500).send('Something happened');
             })
 
-    })
-    .delete(function(req, res) {
-        shoppingItemModel.findByIdAndRemove(req.params.id)
-            .then(function(item) {
-                res.status(201).send(`your ${item.item} was removed`)
-            })
-    })
+    });
 
-// router.route('/item/:item')
-//     .get(function(req, res) {
-//         let myItem = req.params.item;
-//         shoppingItemModel.find({ item: new RegExp('^' + myItem + '*', "i") })
-//             .then(function(items) {
-//                 res.status(200).json(items);
-//             })
-//             .catch(function() {
-//                 console.log('inside of catch');
-//                 res.status(500).send('Something happened');
-//             })
-//     })
+router.delete('/id/:shoppingLocationId/:id', (req, res) => {
+    shoppingLocation.findById(req.params.shoppingLocationId)
+        .then(function(item) {
+            console.log(item.allItems)
+            let myId = req.params.id;
+            item.allItems = item.allItems.filter(newArr => newArr._id != myId);
+            item.save();
+            console.log('delete request processing');
+            res.status(201).send(`your ${item} was removed`);
+        })
+        .catch(function(err) {
+            console.log('something bad happened' + err)
+            res.status(400).send('something bad happened' + err)
+        })
+});
 
 router.route('/id/:id')
-    .put(function(req, res) {
-            let editOptions = ['item', 'quantity'];
-            let editField = {};
+    .post(function(req, res) {
+        let myID = req.params.id
+        shoppingLocation.findById(myID)
+            .then(function(item) {
 
-            editOptions.forEach((field) => {
-                if (field in req.body) {
-                    editField[field] = req.body[field]
+                let newShoppingListItem = new shoppingList();
+                newShoppingListItem.item = req.body.item;
+                newShoppingListItem.quantity = req.body.quantity;
+                newShoppingListItem.checked = false;
+
+
+                item.allItems.push(newShoppingListItem)
+                item.save()
+                res.send(200)
+            })
+    });
+
+router.put('/id/:parentId/:id', (req, res) => {
+    shoppingLocation.findById(req.params.parentId)
+        .then(function(item) {
+            let myId = req.params.id;
+            for (let i = 0; i < item.allItems.length; i++) {
+                if (item.allItems[i]._id == myId) {
+
+
+
+
+
+                    let editOptions = ['item', 'quantity', 'checked'];
+
+
+                    editOptions.forEach((field) => {
+                        if (field in req.body) {
+                            item.allItems[i][field] = req.body[field]
+                        }
+                    })
                 }
-            });
-            shoppingItemModel.findByIdAndUpdate(req.params.id, { $set: editField }, { new: true })
-                .then((item) => {
-                    console.log('put successful')
-                    res.status(200).json(item);
-                })
+            }
+            item.save()
+        })
+        //shoppingList.findByIdAndUpdate(req.params.id, { $set: editField }, { new: true })
+        .then((item) => {
+            console.log('put successful')
 
-                .catch(() => {
-                    console.log('inside of catch');
-                    res.status(400).send('something bad happened')
-                })
+            res.status(200).send('put successful');
+        })
+
+        .catch(() => {
+            console.log('inside of catch');
+            res.status(400).send('something bad happened')
+        })
 
 
-    });            
-            module.exports = router;
+});
+
+module.exports = router;

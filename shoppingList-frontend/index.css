@@ -15,3 +15,7 @@ body, section{
 	height: 50px;
 	width: fit-content;
 }
+
+.checked{
+	text-decoration: line-through;
+}

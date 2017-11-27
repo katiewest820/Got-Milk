@@ -1,23 +1,30 @@
 
 const mongoose = require('mongoose');
 
-var shoppingItemSchema = new mongoose.Schema({
-    
+
+var shoppingListSchema = new mongoose.Schema({
+	item: String,
+	quantity: String,
+	checked: false
+})
+
+var shoppingLocationSchema = new mongoose.Schema({
     	listName: String,
-    	item: [],
-    	quantity: []
+    	allItems: [shoppingListSchema],
+    	//quantity: []
     //date: { type: Date, default: Date.now }
 
 	
 });
 
-shoppingItemSchema.methods.apiRepr = function() {
-	return{
-		listName: this.listName,
-		item: item.push(this.item),
-		quantity : quantity.push(this.quantity),
-		id: this._id
-	}
-}
 
-module.exports= mongoose.model('ShoppingItem', shoppingItemSchema);
+
+
+
+var shoppingList = mongoose.model('ShoppingList', shoppingListSchema);
+var shoppingLocation = mongoose.model('ShoppingLocation', shoppingLocationSchema)
+ 
+module.exports = {
+ 	shoppingList: shoppingList,
+ 	shoppingLocation: shoppingLocation
+ }
