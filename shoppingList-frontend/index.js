@@ -75,7 +75,7 @@ function getAllItems() {
         $('.shoppingList').empty();
         $('.createNewList').fadeOut();
         $('.shoppingListItems').fadeIn();
-        $('.title').html(`<h1>${myShoppingList.listName} Shopping List</h1>`)
+        $('.title').html(`${myShoppingList.listName} Shopping List`)
         let obj = myShoppingList.allItems
         for (x in obj) {
             
@@ -91,6 +91,8 @@ function getAllItems() {
     });
 
 };
+
+
 
 
 
@@ -110,8 +112,11 @@ function addItem() {
             })
             .done(function() {
                 console.log('post successful')
-                $('input[type="text"], textarea').val('')
-                getAllItems()
+                $('input[type="text"], textarea').val('');
+                $('.addItemsButton').fadeIn();
+                $('#inputBox').fadeOut();
+                getAllItems();
+
             })
             .fail(function(jqXHR, textStatus, err) {
                 console.log('something bad happened' + err)
@@ -166,6 +171,15 @@ function checkOffListItem(){
     });
 }
 
+function showAddItemsForm(){
+    $('.addItemsButton').on('click', function(){
+        $('#inputBox').slideDown('slow').css('display', 'grid')
+        $('.submitButton').delay(500).fadeIn()
+        $('.addItemsButton').fadeOut();
+       
+    })
+}
+
 function backToLists(){
     $('.back').on('click', function(){
         myShoppingList = ' ';
@@ -184,5 +198,6 @@ showListItems()
 addListName()
 checkOffListItem()
 backToLists()
-
 deleteListName()
+
+showAddItemsForm()

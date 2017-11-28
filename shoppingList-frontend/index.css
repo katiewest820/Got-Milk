@@ -70,7 +70,7 @@ html, body{
 .title{
 	text-align: center;
 	font-weight: bold;
-	font-size: 25px;
+	font-size: 30px;
 	font-family: 'Gloria Hallelujah', cursive;
 }
 
@@ -79,7 +79,7 @@ html, body{
 }
 
 .shoppingList div{
-	width: 200px;
+	
 	text-align: center;
 	padding: 20px;
 	margin: 30px;
@@ -96,20 +96,18 @@ html, body{
 }
 
 #inputBox{
-	display: grid;
+	display: none;
+	/*display: grid;*/
 	justify-items: center;
 	align-content: center;
 	background-color: white;
 	border: solid black 2px;
 	margin:auto;
 	padding: 30px;
-	height: fit-content;
-	width: fit-content;
+	
 }
 
-#inputBox label{
-	margin: 20px;
-}
+
 
 #inputBox input{
 	border: none;
@@ -123,8 +121,10 @@ html, body{
 }
 
 .submitButton{
+	display: none;
 	background-color: #D3D3D3;
-	padding: 8px 20px;
+	padding: 5px 10px;
+	/*margin-top: 15px;*/
 	font-weight: bold;
 	border-radius: 10%;
 }
@@ -154,6 +154,24 @@ html, body{
 .inputDataListName{
 	width: 300px;
 	height: 25px;	
+}
+
+#inputBox{
+	height: fit-content;
+	width: fit-content;
+}
+
+#inputBox label{
+	margin: 20px;
+}
+
+.title{
+	font-size: 45px;
+}
+
+.submitButton{
+	padding: 8px 20px;
+	
 }
 
 }
