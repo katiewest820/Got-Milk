@@ -11,16 +11,23 @@ function showListNames() {
     $.get(`${myURL}item`, function(results, error) {
         console.log(results)
         results.forEach((item) => {
-            $('.apiListName').append(`<div class="listNameRow"><i class="fa fa-trash deleteListName" aria-hidden="true" value="${item._id}"></i><a href="#" value="${item._id}" class="${item._id}">${item.listName}</a></div>`)
+            $('.apiListName').append(`<div class="listNameRow">
+                <i class="fa fa-trash deleteListName" title="Delete List" aria-hidden="true" value="${item._id}"></i>
+                <a href="#" value="${item._id}" class="${item._id}">${item.listName}</a></div>`)
         });
     });
 }
 
 function addListName() {
     $('.newListButton').on('click', function() {
+        let listNameVal =  $('.inputDataListName').val()
         let myListName = {
-            listName: $('.inputDataListName').val()
+            listName: listNameVal
         }
+        console.log(listNameVal.length)
+        if(listNameVal.length <= 0){
+            entryError();
+        }else{
         $.ajax({
                 url: `${myURL}item`,
                 type: 'POST',
@@ -34,8 +41,19 @@ function addListName() {
 
 
             });
+        }    
     });
 };
+
+function entryError(){
+    $('.createNewList').fadeOut().delay(1400).fadeIn();
+    $('.errorScreen').fadeIn().delay(1000).fadeOut();
+}
+
+function entryErrorTwo(){
+    $('.shoppingListItems').fadeOut().delay(1400).fadeIn();
+    $('.errorScreen').fadeIn().delay(1000).fadeOut();
+}
 
 function deleteListName(){
     $('.apiListName').on('click', '.deleteListName', function(){
@@ -78,14 +96,22 @@ function getAllItems() {
         $('.title').html(`${myShoppingList.listName} Shopping List`)
         let obj = myShoppingList.allItems
         for (x in obj) {
-            
             console.log(obj[x])
+            //sorting items by checked status
+            let sorted = obj.sort((a,b) => {
+                return a.checked - b.checked
+            })
+            console.log(sorted)
+
            let checked = '';
            if(obj[x].checked == true){
             checked = 'checked'
            }
-           $('.shoppingList').append(`<div id='${obj[x]._id}' class='${checked}'><p>Item: ${obj[x].item}</p><p>Quantity: ${obj[x].quantity}</p>
-                                        <i class="fa fa-check fa-2x checkOff" aria-hidden="true"></i><i class="fa fa-trash fa-2x delete" aria-hidden="true"></i></div>`)
+           $('.shoppingList').append(`<div id='${obj[x]._id}' class='${checked}'>
+                                    <p>Item: ${obj[x].item}</p>
+                                    <p>Quantity: ${obj[x].quantity}</p>
+                                    <i class="fa fa-check checkOff" title="Check Off Item" aria-hidden="true"></i>
+                                    <i class="fa fa-trash delete" title="Delete Item" aria-hidden="true"></i></div>`)
         }
 
     });
@@ -93,17 +119,31 @@ function getAllItems() {
 };
 
 
-
+function cancelEntry(){
+    $('.cancelEntry').on('click', function(){
+        $('input[type="text"], textarea').val('');
+        $('#inputBox').slideUp('slow');
+        $('.addItemScreenButtons').delay(400).fadeIn();
+    });
+}
 
 
 function addItem() {
     $('.submitButton').on('click', function() {
         console.log('beginning of post')
+        let itemVal = $('.inputDataItem').val();
+        console.log(itemVal)
+        let quantityVal = $('.inputDataQuantity').val();
+        console.log(quantityVal)
         let myItem = {  
-            item: $('.inputDataItem').val(),
-            quantity: $('.inputDataQuantity').val(),
+            item: itemVal,
+            quantity: quantityVal,
             checked: false
         }
+
+        if(quantityVal <= 0 || itemVal <= 0){
+            entryErrorTwo()
+        }else{
         $.ajax({
                 url: `${myURL}item/id/${myShoppingList._id}`,
                 type: 'POST',
@@ -113,8 +153,8 @@ function addItem() {
             .done(function() {
                 console.log('post successful')
                 $('input[type="text"], textarea').val('');
-                $('.addItemsButton').fadeIn();
-                $('#inputBox').fadeOut();
+                $('#inputBox').slideUp('slow');
+                $('.addItemScreenButtons').delay(400).fadeIn();
                 getAllItems();
 
             })
@@ -122,6 +162,7 @@ function addItem() {
                 console.log('something bad happened' + err)
                 console.log(textStatus)
             })
+        }    
     });
 };
 
@@ -171,11 +212,31 @@ function checkOffListItem(){
     });
 }
 
+function deleteAllCheckedOff(){
+    $('.deleteAllChecked').on('click', function(){
+        let parentId = myShoppingList._id;
+        //let itemId = myShoppingItems._id;
+        $.ajax({
+            url: `${myURL}item/completed/id/${parentId}`,
+            type: 'DELETE'
+        })
+        .done(() =>{
+            console.log('delete many success')
+        })
+        .fail((err) =>{
+            console.log('something bad happened' + err)
+        })
+
+
+    })
+}
+
 function showAddItemsForm(){
     $('.addItemsButton').on('click', function(){
         $('#inputBox').slideDown('slow').css('display', 'grid')
-        $('.submitButton').delay(500).fadeIn()
-        $('.addItemsButton').fadeOut();
+        $('.submitButton').delay(500).fadeIn();
+        $('.cancelEntry').delay(500).fadeIn();
+        $('.addItemScreenButtons').fadeOut();
        
     })
 }
@@ -199,5 +260,7 @@ addListName()
 checkOffListItem()
 backToLists()
 deleteListName()
-
 showAddItemsForm()
+cancelEntry()
+
+deleteAllCheckedOff()

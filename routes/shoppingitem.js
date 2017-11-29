@@ -1,5 +1,5 @@
 const express = require('express');
-const { shoppingList, shoppingLocation } = require('../model');
+const { shoppingList, shoppingLocation, user} = require('../model');
 //const shoppingList = require('../model')
 const router = express.Router();
 
@@ -84,6 +84,27 @@ router.delete('/id/:shoppingLocationId/:id', (req, res) => {
             res.status(400).send('something bad happened' + err)
         })
 });
+
+router.delete('/completed/id/:id', (req, res) => {
+    // let myId = req.params.id
+     shoppingLocation.findById(req.params.id)
+        .then((item) => {
+              console.log(item)
+                item.allItems = item.allItems.filter(newArr => newArr.checked == false);
+                item.save()
+           
+                    console.log('delete many success')
+                    res.send('delete of many successful').status(201)
+                
+                })
+            
+       
+        .catch((err) => {
+            console.log(err);
+            res.send('something bad happened')
+        })
+})
+
 
 
 

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Shopping List Frontend</title>
+    <title>Shopping List App</title>
     <link rel="stylesheet" type="text/css" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,40 +10,50 @@
 </head>
 
 <body>
+    <section class="errorScreen">
+        <div class="errorMsg">
+            <h1>Please Complete all Fields</h1>
+        </div>
+    </section>    
     <section class="createNewList">
-        
+            <h1 class="shoppingListHeader">Shopping Lists:</h1>
+            <div class="apiListName"></div>
+            
             <form id="newList">
-                <label>New List Name:</label>
+                <label>Add New List</label>
                 <input class="inputDataListName" type="text">
                 <i class="fa fa-plus fa-2x newListButton" aria-hidden="true"></i>
             </form>
-            <!--<button class="newListButton"></button>-->
-            
-       
-        <div class="apiListName">
-        </div>
+
     </section>
     <section class="shoppingListItems">
         
         
         <div class="addNewItems">
             <h1 class="title"></h1>
-            <button class="addItemsButton">Add</button>
+            <div class="addItemScreenButtons">
+                <!--<button class="addItemsButton">Add</button>
+                <button class="back">Back to Lists</button>-->
+                <i class="fa fa-arrow-left fa-2x back" aria-hidden="true" title="Back to Lists"></i>
+                <i class="fa fa-plus fa-2x addItemsButton" aria-hidden="true" title="Add Shopping Item"></i>
+                
+            </div>
             <div id="inputBox">
                 
                     <label>Item
-                        <input class="inputDataItem" type="text" name="Item">
+                        <input class="inputDataItem" type="text" name="Item" autocomplete="on">
                     </label>
                     <label>Quantity
-                        <input class="inputDataQuantity" type="text" name="quantity">
+                        <input class="inputDataQuantity" type="text" name="quantity" autocomplete="on">
                     </label>
                     <button class="submitButton">Submit</button>
+                    <button class="cancelEntry">Cancel</button>
                 
             </div>
         </div>
         <div class="shoppingList">
         </div>
-        <div><button class="back">Back to Lists</button></div>
+        <button class="deleteAllChecked">Delete All Checked</button>
     </section>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="index.js"></script>
