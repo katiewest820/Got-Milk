@@ -3,7 +3,6 @@ const { shoppingList, shoppingLocation} = require('../model');
 //const shoppingList = require('../model')
 const router = express.Router();
 
-const loggedInUser = require('../authModel').loggedInUser;
 // router.use(function(req, res, next) { console.log("route middleware");
 //     res.setHeader('Access-Control-Allow-Origin', '*');
 //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -12,7 +11,7 @@ const loggedInUser = require('../authModel').loggedInUser;
 //     next(); 
 //});
 
-console.log(loggedInUser)
+
 
 router.route('/')
     .get(function(req, res) {
@@ -89,19 +88,14 @@ router.delete('/id/:shoppingLocationId/:id', (req, res) => {
 });
 
 router.delete('/completed/id/:id', (req, res) => {
-    // let myId = req.params.id
      shoppingLocation.findById(req.params.id)
         .then((item) => {
-              console.log(item)
-                item.allItems = item.allItems.filter(newArr => newArr.checked == false);
-                item.save()
-           
-                    console.log('delete many success')
-                    res.send('delete of many successful').status(201)
-                
-                })
-            
-       
+            console.log(item)
+            item.allItems = item.allItems.filter(newArr => newArr.checked == false);
+            item.save()
+            console.log('delete many success')
+            res.send('delete of many successful').status(201)
+            })
         .catch((err) => {
             console.log(err);
             res.send('something bad happened')

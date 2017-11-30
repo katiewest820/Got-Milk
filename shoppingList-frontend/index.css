@@ -128,9 +128,10 @@ input, i, a, button{
 .addItemScreenButtons{
 	padding: 10%;
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-column-gap: 20px;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-column-gap: 15px;
 	justify-items: center;
+	
 }
 
 .addItemScreenButtons i:hover{

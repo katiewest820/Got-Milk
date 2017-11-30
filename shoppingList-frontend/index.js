@@ -222,6 +222,7 @@ function deleteAllCheckedOff(){
         })
         .done(() =>{
             console.log('delete many success')
+            getAllItems()
         })
         .fail((err) =>{
             console.log('something bad happened' + err)
