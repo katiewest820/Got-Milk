@@ -1,8 +1,9 @@
 const express = require('express');
-const { shoppingList, shoppingLocation, user} = require('../model');
+const { shoppingList, shoppingLocation} = require('../model');
 //const shoppingList = require('../model')
 const router = express.Router();
 
+const loggedInUser = require('../authModel').loggedInUser;
 // router.use(function(req, res, next) { console.log("route middleware");
 //     res.setHeader('Access-Control-Allow-Origin', '*');
 //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -10,6 +11,8 @@ const router = express.Router();
 //     res.setHeader('Access-Control-Allow-Credentials', true);
 //     next(); 
 //});
+
+console.log(loggedInUser)
 
 router.route('/')
     .get(function(req, res) {

@@ -21,10 +21,11 @@ app.get('/', (req, res) => {
 
 
 const shoppingItemRoute = require('./routes/shoppingitem');
+const authenticationRoute = require('./routes/auth');
 
 app.all('/');
 app.use('/item', shoppingItemRoute);
-
+app.use('/auth', authenticationRoute);
 
 
 

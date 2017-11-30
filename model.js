@@ -1,6 +1,6 @@
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+//const bcrypt = require('bcryptjs');
 
 mongoose.Promise = global.Promise;
 
@@ -18,35 +18,35 @@ var shoppingLocationSchema = new mongoose.Schema({
 });
 
 //auth schema. creates and stores user info
-const UserSchema = mongoose.Schema({
-	username: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	password: {
-		type: String,
-		required: true
-	},
-	firstName: {type: String, default: ''},
-	lastName: {type: String, default: ''}
-});
+// const UserSchema = mongoose.Schema({
+// 	username: {
+// 		type: String,
+// 		required: true,
+// 		unique: true
+// 	},
+// 	password: {
+// 		type: String,
+// 		required: true
+// 	},
+// 	firstName: {type: String, default: ''},
+// 	lastName: {type: String, default: ''}
+//});
 
-UserSchema.methods.validatePassword = function(password){
-	return bcrypt.compare(password, this.password);
-};
+// UserSchema.methods.validatePassword = function(password){
+// 	return bcrypt.compare(password, this.password);
+// };
 
-UserSchema.statics.hashPassword = function(password){
-	return bcrypt.hash(password, 10);
-};
+// UserSchema.statics.hashPassword = function(password){
+// 	return bcrypt.hash(password, 10);
+// };
 
 
 var shoppingList = mongoose.model('ShoppingList', shoppingListSchema);
 var shoppingLocation = mongoose.model('ShoppingLocation', shoppingLocationSchema);
-var user = mongoose.model('UserSchema', UserSchema); 
+//var user = mongoose.model('UserSchema', UserSchema); 
 
 module.exports = {
  	shoppingList: shoppingList,
- 	shoppingLocation: shoppingLocation,
- 	user: user
+ 	shoppingLocation: shoppingLocation
+ 	//user: user
  }
