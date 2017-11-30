@@ -23,6 +23,7 @@ const createAuthToken = function(user) {
 
 router.post('/login', (req, res) => {
     //check to see if User exists
+
     UserSchema.findOne({ username: req.body.username })
         .then((user) => {
             loggedInUser = user;
@@ -31,8 +32,12 @@ router.post('/login', (req, res) => {
                 res.send('user does not exist').status(500)
                 return
             }
+            //check to see if password and username are included
+            if(!req.body.password && req.body.username){
+                res.send('you must enter a username and password')
+                return
+            }
             //check to see if password matches. If not send error
-
             if (!bcrypt.compareSync(req.body.password, user.password)) {
 
                 res.send('password does not match').status(500)
@@ -116,4 +121,3 @@ router.post('/refresh', (req, res) => {
 })
 
 module.exports = router;
-//module.exports = loggedInUser;

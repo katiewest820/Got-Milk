@@ -1,7 +1,34 @@
 const express = require('express');
-const { shoppingList, shoppingLocation} = require('../model');
-//const shoppingList = require('../model')
+const jwt = require('jsonwebtoken')
+const { shoppingList, shoppingLocation } = require('../model');
+const conf = require('../config').JWT_SECRET;
+
 const router = express.Router();
+
+
+// router.use((req, res, next) => {
+//     // if (req.method == "GET") { 
+//     //     next(); 
+//     //     return; 
+//     // }
+
+//     const token = req.headers.authorization || req.body.token;
+
+//     if (!token) {
+//         res.status(401).json({ message: "unauthorized" });
+//         return;
+//     }
+
+//     jwt.verify(token, conf, (error, decode) => {
+//         if (error) {
+//             res.status(500).json({ message: "Token is not valid" });
+//             return;
+//         }
+
+//         req.user = decode;
+//         next();
+//     });
+// });
 
 // router.use(function(req, res, next) { console.log("route middleware");
 //     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,6 +42,7 @@ const router = express.Router();
 
 router.route('/')
     .get(function(req, res) {
+        
         shoppingLocation.find({})
             .then(function(items) {
                 res.status(200).json(items);
@@ -29,6 +57,7 @@ router.route('/')
     .post(function(req, res) {
         let newShoppingLocation = new shoppingLocation();
         newShoppingLocation.listName = req.body.listName;
+        newShoppingLocation.userId = req.body.userId;
         //newShoppingItem.item.push(req.body.item);
         //newShoppingItem.quantity.push(req.body.quantity);
 
@@ -88,14 +117,14 @@ router.delete('/id/:shoppingLocationId/:id', (req, res) => {
 });
 
 router.delete('/completed/id/:id', (req, res) => {
-     shoppingLocation.findById(req.params.id)
+    shoppingLocation.findById(req.params.id)
         .then((item) => {
             console.log(item)
             item.allItems = item.allItems.filter(newArr => newArr.checked == false);
             item.save()
             console.log('delete many success')
             res.send('delete of many successful').status(201)
-            })
+        })
         .catch((err) => {
             console.log(err);
             res.send('something bad happened')

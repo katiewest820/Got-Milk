@@ -13,6 +13,7 @@ var shoppingListSchema = new mongoose.Schema({
 
 //Schema that creates list names and stores objects of items
 var shoppingLocationSchema = new mongoose.Schema({
+		userId: mongoose.Schema.Types.ObjectId,
     	listName: String,
     	allItems: [shoppingListSchema]
 });
