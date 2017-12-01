@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Shopping List App</title>
+    <title>Got Milk?</title>
     <link rel="stylesheet" type="text/css" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,9 +10,44 @@
 </head>
 
 <body>
+    <section class="loginPage">
+        <div class="webSiteTitle"><h1>Got Milk?</h1></div>
+        <div class="loginForm">
+            
+                <label>Username:
+                    <input class="userNameInput" type="text" >
+                </label>
+                <label>Password:
+                   <input class="passwordInput" type="text"> 
+                </label>
+                
+                <button class="submitLogin" type="submit">Submit</button>
+                <button class="createNewAct" type="submit">Create New Account</button>
+        </div>
+    </section>
+
+    <section class="createAccountPage">
+        <div class="createActForm">
+            <label>Username:
+                <input class="createUN" type="text">
+            </label>
+            <label>First Name:
+                <input class="createFN" type="text">
+            </label>
+            <label>Last Name:
+                <input class="createLN" type="text">
+            </label>
+            <label>Password:
+                <input class="createPW" type="text">
+            </label>
+            <button class="submitNewAct">Submit</button>
+        </div>
+    </section>
+
+
     <section class="errorScreen">
         <div class="errorMsg">
-            <h1>Please Complete all Fields</h1>
+            <!--<h1>Please Complete all Fields</h1>-->
         </div>
     </section>    
     <section class="createNewList">

@@ -11,30 +11,25 @@ const UserSchema = require('../authModel');
 mongoose.Promise = global.Promise;
 
 let token;
-let loggedInUser;
+let myStorage;
 
 const createAuthToken = function(user) {
     return jwt.sign({ user }, config.JWT_SECRET)
 }
-
-//UserSchema.statics.hashPassword = function(password){
-//   return bcrypt.hash(password, 10);
-//
 
 router.post('/login', (req, res) => {
     //check to see if User exists
 
     UserSchema.findOne({ username: req.body.username })
         .then((user) => {
-            loggedInUser = user;
+            //check to see if password and username are included
+            if(!req.body.password || !req.body.username){
+                res.send('you must enter a username and password').status(500)
+                return
+            }
             //if User does not exist stop and send error
             if (!user) {
                 res.send('user does not exist').status(500)
-                return
-            }
-            //check to see if password and username are included
-            if(!req.body.password && req.body.username){
-                res.send('you must enter a username and password')
                 return
             }
             //check to see if password matches. If not send error
@@ -52,7 +47,8 @@ router.post('/login', (req, res) => {
                 }
                 token = jwt.sign(userToken, config.JWT_SECRET)
                 console.log(`token: ${token}`)
-                res.send(`password matches! Token: ${token}`).status(200)
+                
+                res.send(token).status(200)
 
             }
 
@@ -96,7 +92,7 @@ router.post('/register', (req, res) => {
                         res.send(err).status(500)
                         return
                     }
-                    res.send('new user created').status(200)
+                    res.send(user).status(200)
                 })
             })
         })
@@ -116,6 +112,7 @@ router.post('/refresh', (req, res) => {
     }
 
     token = jwt.sign(userToken, config.JWT_SECRET)
+    
     console.log(`new token: ${token}`)
     res.send(token).status(200)
 })

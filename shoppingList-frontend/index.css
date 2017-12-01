@@ -9,6 +9,49 @@ input, i, a, button{
 	cursor: pointer;
 }
 
+.loginForm{
+	background-color: #D3D3D3;
+	border: 8px double black;
+	display: grid;
+	justify-content: center;
+	justify-items: center;
+	grid-gap: 20px;
+	margin: auto;
+	margin-top:30%;
+	padding: 20px;
+	width: fit-content;
+}
+
+.loginForm input{
+	background: none;
+	border:none;
+	border-bottom: solid 1px black;
+}
+
+.loginForm input:focus{
+	outline: none;
+}
+
+.loginForm label{
+	font-weight: bold;
+	font-size: 18px;
+	font-family: 'Gloria Hallelujah', cursive;
+}
+
+.loginForm button, .submitNewAct{
+	color:white;
+	background-color: black;
+	border-radius: 5px;
+	font-weight: bold;
+	width: 160px;
+	height:40px;
+	justify-self: center;
+}
+
+.loginForm button:hover, .submitNewAct:hover{
+	background-color: #DA70D6;
+}
+
 .errorScreen{
 	display: none;
 	margin: 40% 20%;
@@ -19,23 +62,50 @@ input, i, a, button{
 
 .errorMsg{
 	margin: auto;
+	margin-top:10%;
 	text-align: center;
 	width:fit-content;
-	font-size:140%;
+	font-size:18px;
 	font-family: 'Gloria Hallelujah', cursive;
 	font-weight: bold;
 	border: double 8px black;
 	padding: 10%;
 	background-color: #D3D3D3;
-	
 }
 
-.createNewList, .shoppingListItems{
+.createActForm{
+	display: grid;
+	justify-content: center;
+	grid-gap: 20px;
+}
+
+.createActForm label{
+	font-size:18px;
+	font-family: 'Gloria Hallelujah', cursive;
+	font-weight: bold;
+}
+
+.createActForm input{
+	background: none;
+	border: none;
+	border-bottom: solid 1px black;
+}
+
+.createActForm input:focus{
+	outline: none;
+}
+
+.createNewList, .shoppingListItems, .createAccountPage{
+	display: none;
 	background-color: #D3D3D3;
 	height: fit-content;
 	padding: 10%;
 	border: 8px double black;
 	margin: 13%;
+}
+
+.createAccountPage{
+	margin: 20%;
 }
 
 .shoppingListHeader{
@@ -84,10 +154,6 @@ input, i, a, button{
 
 .deleteListName:hover{
 	color: #DA70D6;
-}
-
-.shoppingListItems{
-	display: none;
 }
 
 .apiListName a{
@@ -206,9 +272,23 @@ input, i, a, button{
 		margin: 20%;
 	}
 
+	.errorMsg{
+		font-size: 25px;
+		margin-top:0%;
+	}
+
+	.loginForm{
+		margin-top:15%;
+		padding: 40px;
+	}
+
 	.createNewList, .shoppingListItems{
 		padding: 50px;
 		margin: 100px 200px;
+	}
+
+	.createAccountPage{
+		margin: 11%;
 	}
 
 	.shoppingListHeader{

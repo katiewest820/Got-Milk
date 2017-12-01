@@ -2,20 +2,148 @@ console.log('I am working!!!')
 
 let myShoppingList;
 let myShoppingItems;
-let myURL = window.location.href.split('#')[0];
+let myURL = window.location.href.split('?')[0];
 let myVal;
+let myStorage = window.localStorage;
 
 
+
+//login functions
+function userLogin(){
+    $('.submitLogin').on('click', function(){
+        let username = $('.userNameInput').val();
+        let password = $('.passwordInput').val();
+        let userLoginInfo = {
+            username: username,
+            password: password
+        }
+        console.log(`${username} ${password}`)
+
+        $.ajax({
+            url: `${myURL}auth/login`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(userLoginInfo)
+        })
+        .done((token) => {
+            console.log(`this is a message: ${token}`)
+            localStorage.setItem('tokenKey', token)
+            console.log(myStorage.tokenKey)
+            if(token == 'you must enter a username and password'){
+                console.log('error 1')
+                missingLoginField();
+                return
+            }
+            if(token == 'user does not exist'){
+                console.log('error 2')
+                userDoesNotExist();
+                return
+            }
+            if(token == 'password does not match'){
+                console.log('error 3')
+                passwordWrong();
+                return
+            }else{
+                console.log('test')
+                $('.apiListName').empty()
+                $('.loginPage').fadeOut();
+                $('.createNewList').delay(400).fadeIn();
+                showListNames()
+            }
+        })
+        .fail((err) => {
+            console.log(`something bad happened ${err}`)
+        })
+    })
+}
+
+function missingLoginField(){
+    $('.loginPage').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>Please enter valid username and password</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1000).fadeOut();
+}
+
+function userDoesNotExist(){
+    $('.loginPage').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>Username does not exist</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1000).fadeOut();
+}
+
+function passwordWrong(){
+    $('.loginPage').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>Incorrect password entered</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1000).fadeOut();
+}
+
+
+
+
+//Create new account
+function createAccountPageLoad(){
+    $('.createNewAct').on('click', function(){
+        $('.loginPage').fadeOut();
+        $('.createAccountPage').delay(400).fadeIn();
+    })
+}
+
+function actCreatedSuccessMsg(){
+    $('.createAccountPage').fadeOut();
+    $('.errorMsg').html('<h1>Your account was successfully created!</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1200).fadeOut();
+    $('.loginPage').delay(2100).fadeIn('slow');
+}
+
+function submitNewUserForm(){
+    $('.submitNewAct').on('click', function(){
+        let UN = $('.createUN').val();
+        let FN = $('.createFN').val();
+        let LN = $('.createLN').val();
+        let PW = $('.createPW').val();
+
+        let newUser = {
+            username: UN,
+            firstName: FN,
+            lastName: LN,
+            password: PW
+        }
+        console.log(`${UN} ${FN} ${LN} ${PW}`)
+
+        $.ajax({
+            url: `${myURL}auth/register`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(newUser)
+        })
+        .done((item) => {
+            console.log(item)
+            actCreatedSuccessMsg();
+        })
+        .fail((err) => {
+            console.log(err)
+        })
+    })
+}
+
+
+//after login, load user information
 function showListNames() {
-    $('.apiListName').empty()
-    $.get(`${myURL}item`, function(results, error) {
-        console.log(results)
-        results.forEach((item) => {
-            $('.apiListName').append(`<div class="listNameRow">
-                <i class="fa fa-trash deleteListName" title="Delete List" aria-hidden="true" value="${item._id}"></i>
-                <a href="#" value="${item._id}" class="${item._id}">${item.listName}</a></div>`)
-        });
-    });
+    //$('.apiListName').empty()
+    $.ajax({
+        url: `${myURL}item`,
+        type: 'GET', 
+        headers: {authorization: myStorage.tokenKey}
+        })
+        .done((results) => {
+            console.log(results)
+            results.forEach((item) => {
+                $('.apiListName').append(`<div class="listNameRow">
+                    <i class="fa fa-trash deleteListName" title="Delete List" aria-hidden="true" value="${item._id}"></i>
+                    <a href="#" value="${item._id}" class="${item._id}">${item.listName}</a></div>`)
+            });
+        })
+        .fail((err) => {
+            console.log(err)
+        })
 }
 
 function addListName() {
@@ -32,12 +160,16 @@ function addListName() {
                 url: `${myURL}item`,
                 type: 'POST',
                 contentType: 'application/json',
+                headers: {authorization: myStorage.tokenKey},
                 data: JSON.stringify(myListName)
             })
-            .done(function() {
+            .done(function(item) {
                 console.log('post successful')
+                console.log(item)
                 document.getElementById('newList').reset()
-                showListNames();
+                $('.apiListName').prepend(`<div class="listNameRow">
+                    <i class="fa fa-trash deleteListName" title="Delete List" aria-hidden="true" value="${item._id}"></i>
+                    <a href="#" value="${item._id}" class="${item._id}">${item.listName}</a></div>`)
 
 
             });
@@ -45,28 +177,35 @@ function addListName() {
     });
 };
 
+//Error messages for missed location field entry
 function entryError(){
-    $('.createNewList').fadeOut().delay(1400).fadeIn();
-    $('.errorScreen').fadeIn().delay(1000).fadeOut();
+    $('.createNewList').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>Please Complete All fields</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1000).fadeOut();
 }
 
+//Error message for missed item field entry
 function entryErrorTwo(){
-    $('.shoppingListItems').fadeOut().delay(1400).fadeIn();
-    $('.errorScreen').fadeIn().delay(1000).fadeOut();
+    $('.shoppingListItems').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>Please Complete All fields</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1000).fadeOut();
 }
 
 function deleteListName(){
     $('.apiListName').on('click', '.deleteListName', function(){
+        let thisDiv = $(this).parent('.listNameRow')
+        console.log(thisDiv)
         let myId = $(this).attr('value')
         console.log(myId)
-
         $.ajax({
             url: `${myURL}item/id/${myId}`,
-            type: 'DELETE'
+            type: 'DELETE',
+            headers: {authorization: myStorage.tokenKey}
         })
-        .done(function(){
+        .done(function(item){
             console.log('successful delete')
-            showListNames()
+            console.log(item)
+            $(thisDiv).remove()
         })
         .fail(function(err){
             console.log('something bad happened' + err)
@@ -86,7 +225,12 @@ function showListItems() {
 
 
 function getAllItems() {
-    $.get(`${myURL}item/id/${myVal}`, function(results, error) {
+    $.ajax({
+        url: `${myURL}item/id/${myVal}`, 
+        type: 'GET',
+        headers: {authorization: myStorage.tokenKey}
+    })    
+    .done((results) => {
         myShoppingList = results;
         console.log(myShoppingList.allItems);
         myShoppingItems = myShoppingList.allItems
@@ -114,6 +258,9 @@ function getAllItems() {
                                     <i class="fa fa-trash delete" title="Delete Item" aria-hidden="true"></i></div>`)
         }
 
+    })
+    .fail((err) => {
+        console.log(err)
     });
 
 };
@@ -148,6 +295,7 @@ function addItem() {
                 url: `${myURL}item/id/${myShoppingList._id}`,
                 type: 'POST',
                 contentType: 'application/json',
+                headers: {authorization: myStorage.tokenKey},
                 data: JSON.stringify(myItem)
             })
             .done(function() {
@@ -173,7 +321,8 @@ function deleteItem() {
         console.log(itemId)
         $.ajax({
                  url: `${myURL}item/id/${parentId}/${itemId}`,
-                 type: 'DELETE'
+                 type: 'DELETE',
+                 headers: {authorization: myStorage.tokenKey}
              })
             .done(function() {
                  console.log('delete was successful')
@@ -198,6 +347,7 @@ function checkOffListItem(){
             url: `${myURL}item/id/${parentId}/${myId}`,
             type: 'PUT',
             contentType: 'application/json',
+            headers: {authorization: myStorage.tokenKey},
             data: JSON.stringify({
                 checked: checked
             })
@@ -218,7 +368,8 @@ function deleteAllCheckedOff(){
         //let itemId = myShoppingItems._id;
         $.ajax({
             url: `${myURL}item/completed/id/${parentId}`,
-            type: 'DELETE'
+            type: 'DELETE',
+            headers: {authorization: myStorage.tokenKey}
         })
         .done(() =>{
             console.log('delete many success')
@@ -247,15 +398,19 @@ function backToLists(){
         myShoppingList = ' ';
         myShoppingItems = ' ';
         myVal = ' ';
+        $('.apiListName').empty()
         $('.shoppingListItems').fadeOut();
         $('.createNewList').fadeIn();
         showListNames()
     })
 }
 
+userLogin()
+createAccountPageLoad()
+submitNewUserForm()
+
 deleteItem()
 addItem()
-showListNames()
 showListItems()
 addListName()
 checkOffListItem()
