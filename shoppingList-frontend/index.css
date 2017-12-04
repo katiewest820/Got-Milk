@@ -33,7 +33,6 @@ input, i, a, button{
 	justify-items: center;
 	grid-gap: 15px;
 	margin: auto;
-	
 	padding: 20px;
 	width: fit-content;
 }
@@ -242,7 +241,7 @@ input, i, a, button{
 }
 
 .shoppingList div:last-child{
-	    border-bottom: 1px solid black;
+	border-bottom: 1px solid black;
 }
 
 .checkOff, .delete{
