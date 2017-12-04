@@ -1,6 +1,6 @@
 let myShoppingList;
 let myShoppingItems;
-let myURL = window.location.href.split('?')[0];
+let myURL = window.location.href.split('#')[0];
 let myVal;
 let myStorage = window.localStorage;
 

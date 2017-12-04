@@ -286,6 +286,14 @@ input, i, a, button{
 	border-radius: 10%;
 }
 
+.submitButton{
+	justify-self: end;
+}
+
+.cancelEntry{
+	justify-self: start;
+}
+
 .submitButton:hover, .cancelEntry:hover{
 	background-color: #C2E5D8;
 	color: black;
