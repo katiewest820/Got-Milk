@@ -1,7 +1,7 @@
 # Got Milk?
 
 ## Purpose
-Got Milk? is a shopping list app where a user can create an account, login and create/save shopping lists and items.
+[Got Milk?](https://immense-caverns-78259.herokuapp.com/#) is a shopping list app where a user can create an account, login and create/save shopping lists and items.
 
 ## Technologies Used
 The frontend is built with HTML/CSS and Javascript/Jquery:
