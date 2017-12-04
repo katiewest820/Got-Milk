@@ -1,12 +1,30 @@
-console.log('I am working!!!')
-
 let myShoppingList;
 let myShoppingItems;
 let myURL = window.location.href.split('?')[0];
 let myVal;
 let myStorage = window.localStorage;
 
+//keep logged in user logged in
+function checkUserLogin(){
+    if(localStorage.getItem('userId')){
+        $('.apiListName').empty()
+        $('.loginPage').css('display', 'none')
+        $('.createNewList').css('display', 'block')
+        showListNames()
+    }
+}
 
+//log out function
+function logOut(){
+    $('.logOut').on('click', function(){
+        localStorage.removeItem('userId');
+        localStorage.removeItem('token');
+        $('.userNameInput').val('');
+        $('.passwordInput').val('');
+        $('.createNewList').fadeOut();
+        $('.loginPage').delay(500).fadeIn('slow');
+    });
+}    
 
 //login functions
 function userLogin(){
@@ -17,46 +35,44 @@ function userLogin(){
             username: username,
             password: password
         }
-        console.log(`${username} ${password}`)
-
         $.ajax({
             url: `${myURL}auth/login`,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(userLoginInfo)
         })
-        .done((token) => {
-            console.log(`this is a message: ${token}`)
-            localStorage.setItem('tokenKey', token)
-            console.log(myStorage.tokenKey)
-            if(token == 'you must enter a username and password'){
+        .done((response) => {
+            console.log(`this is a message: ${response.token}`)
+            
+            if(response.token == 'you must enter a username and password'){
                 console.log('error 1')
                 missingLoginField();
                 return
             }
-            if(token == 'user does not exist'){
+            if(response.token == 'user does not exist'){
                 console.log('error 2')
                 userDoesNotExist();
                 return
             }
-            if(token == 'password does not match'){
+            if(response.token == 'password does not match'){
                 console.log('error 3')
                 passwordWrong();
                 return
-            }else{
-                console.log('test')
-                $('.apiListName').empty()
-                $('.loginPage').fadeOut();
-                $('.createNewList').delay(400).fadeIn();
-                showListNames()
             }
+            localStorage.setItem('tokenKey', response.token)
+            localStorage.setItem('userId', response.userId)
+            $('.apiListName').empty()
+            $('.loginPage').fadeOut();
+            $('.createNewList').delay(400).fadeIn();
+            showListNames();  
         })
         .fail((err) => {
             console.log(`something bad happened ${err}`)
-        })
-    })
+        });
+    });
 }
 
+//login error messages
 function missingLoginField(){
     $('.loginPage').fadeOut().delay(1800).fadeIn();
     $('.errorMsg').html('<h1>Please enter valid username and password</h1>');
@@ -76,8 +92,6 @@ function passwordWrong(){
 }
 
 
-
-
 //Create new account
 function createAccountPageLoad(){
     $('.createNewAct').on('click', function(){
@@ -86,6 +100,7 @@ function createAccountPageLoad(){
     })
 }
 
+//Accout create error and success messages
 function actCreatedSuccessMsg(){
     $('.createAccountPage').fadeOut();
     $('.errorMsg').html('<h1>Your account was successfully created!</h1>');
@@ -93,13 +108,25 @@ function actCreatedSuccessMsg(){
     $('.loginPage').delay(2100).fadeIn('slow');
 }
 
+function errorUsernameMsg(){
+    $('.createAccountPage').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>A Username is Required</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1200).fadeOut();
+}
+
+function errorPasswordMsg(){
+    $('.createAccountPage').fadeOut().delay(1800).fadeIn();
+    $('.errorMsg').html('<h1>A Password is Required</h1>');
+    $('.errorScreen').delay(400).fadeIn().delay(1200).fadeOut();
+}
+
+//Submitting new user to DB
 function submitNewUserForm(){
     $('.submitNewAct').on('click', function(){
         let UN = $('.createUN').val();
         let FN = $('.createFN').val();
         let LN = $('.createLN').val();
         let PW = $('.createPW').val();
-
         let newUser = {
             username: UN,
             firstName: FN,
@@ -115,8 +142,17 @@ function submitNewUserForm(){
             data: JSON.stringify(newUser)
         })
         .done((item) => {
-            console.log(item)
-            actCreatedSuccessMsg();
+            if(item == 'You must create a username'){
+                errorUsernameMsg();
+                return
+            }
+            if(item == 'you must create a password'){
+                errorPasswordMsg();
+                return
+            }else{
+                console.log(item)
+                actCreatedSuccessMsg();
+            }
         })
         .fail((err) => {
             console.log(err)
@@ -125,11 +161,18 @@ function submitNewUserForm(){
 }
 
 
+//Cancel account creation
+function cancelNewAct(){
+    $('.cancelNewAct').on('click', function(){
+        $('.createAccountPage').fadeOut();
+        $('.loginPage').delay(500).fadeIn();
+    })
+}
+
 //after login, load user information
 function showListNames() {
-    //$('.apiListName').empty()
     $.ajax({
-        url: `${myURL}item`,
+        url: `${myURL}item/getByUser/${localStorage.getItem('userId')}`,
         type: 'GET', 
         headers: {authorization: myStorage.tokenKey}
         })
@@ -146,11 +189,13 @@ function showListNames() {
         })
 }
 
+//Create new shopping list name
 function addListName() {
     $('.newListButton').on('click', function() {
         let listNameVal =  $('.inputDataListName').val()
         let myListName = {
-            listName: listNameVal
+            listName: listNameVal,
+            userId: localStorage.getItem('userId')
         }
         console.log(listNameVal.length)
         if(listNameVal.length <= 0){
@@ -236,7 +281,7 @@ function getAllItems() {
         myShoppingItems = myShoppingList.allItems
         $('.shoppingList').empty();
         $('.createNewList').fadeOut();
-        $('.shoppingListItems').fadeIn();
+        $('.shoppingListItems').delay(500).fadeIn('slow');
         $('.title').html(`${myShoppingList.listName} Shopping List`)
         let obj = myShoppingList.allItems
         for (x in obj) {
@@ -400,15 +445,18 @@ function backToLists(){
         myVal = ' ';
         $('.apiListName').empty()
         $('.shoppingListItems').fadeOut();
-        $('.createNewList').fadeIn();
+        $('.createNewList').delay(500).fadeIn('slow');
         showListNames()
     })
 }
 
+
+checkUserLogin()
+logOut()
 userLogin()
 createAccountPageLoad()
 submitNewUserForm()
-
+cancelNewAct()
 deleteItem()
 addItem()
 showListItems()

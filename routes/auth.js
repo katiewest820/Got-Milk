@@ -48,7 +48,10 @@ router.post('/login', (req, res) => {
                 token = jwt.sign(userToken, config.JWT_SECRET)
                 console.log(`token: ${token}`)
                 
-                res.send(token).status(200)
+                res.json({
+                    userId: user._id,
+                    token: token
+                }).status(200)
 
             }
 
@@ -57,7 +60,7 @@ router.post('/login', (req, res) => {
 
         .catch((err) => {
             console.log(err)
-            res.send('Somthing bad happened').status(500)
+            res.send(err).status(500)
         })
 })
 
@@ -72,29 +75,40 @@ router.post('/register', (req, res) => {
                 res.send('username already exists, please try again').status(500)
                 return
             }
-            //if UN is unique, create new user
-            const newUser = new UserSchema()
-            newUser.username = req.body.username;
-            newUser.firstName = req.body.firstName;
-            newUser.lastName = req.body.lastName;
-            //taking password and running through hash function
-            bcrypt.hash(req.body.password, 8, (err, hash) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    console.log(hash)
-                }
-                newUser.password = hash
-                //saving new user 
-                newUser.save((err, user) => {
+            
+            if(req.body.username <= 0 ){
+                res.send('You must create a username').status(500)
+                return
+            }
+            if(req.body.password.length <= 0 ){
+                res.send('you must create a password').status(500)
+                return
+            }
+            else{
+                //if UN is unique, create new user
+                const newUser = new UserSchema()
+                newUser.username = req.body.username;
+                newUser.firstName = req.body.firstName;
+                newUser.lastName = req.body.lastName;
+                //taking password and running through hash function
+                bcrypt.hash(req.body.password, 8, (err, hash) => {
                     if (err) {
                         console.log(err)
-                        res.send(err).status(500)
-                        return
+                    } else {
+                        console.log(hash)
                     }
-                    res.send(user).status(200)
+                    newUser.password = hash
+                    //saving new user 
+                    newUser.save((err, user) => {
+                        if (err) {
+                            console.log(err)
+                            res.send(err).status(500)
+                            return
+                        }
+                        res.send('new user created').status(200)
+                    })
                 })
-            })
+            }
         })
         .catch((err) => {
             console.log(err);

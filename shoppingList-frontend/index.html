@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Got Milk?</title>
+    <title>Shopping List App</title>
     <link rel="stylesheet" type="text/css" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,15 +10,19 @@
 </head>
 
 <body>
+
     <section class="loginPage">
-        <div class="webSiteTitle"><h1>Got Milk?</h1></div>
+        <div class="logoImg">
+            <h1>Got Milk?</h1>
+            <img src="./shoppingListLogo.png" height="50px" width="50px">
+        </div>
         <div class="loginForm">
             
                 <label>Username:
                     <input class="userNameInput" type="text" >
                 </label>
                 <label>Password:
-                   <input class="passwordInput" type="text"> 
+                   <input class="passwordInput" type="password" > 
                 </label>
                 
                 <button class="submitLogin" type="submit">Submit</button>
@@ -38,9 +42,10 @@
                 <input class="createLN" type="text">
             </label>
             <label>Password:
-                <input class="createPW" type="text">
+                <input class="createPW" type="password">
             </label>
             <button class="submitNewAct">Submit</button>
+            <button class="cancelNewAct">Cancel</button>
         </div>
     </section>
 
@@ -52,6 +57,7 @@
     </section>    
     <section class="createNewList">
             <h1 class="shoppingListHeader">Shopping Lists:</h1>
+
             <div class="apiListName"></div>
             
             <form id="newList">
@@ -59,6 +65,8 @@
                 <input class="inputDataListName" type="text">
                 <i class="fa fa-plus fa-2x newListButton" aria-hidden="true" title="Add New List"></i>
             </form>
+            <i class="fa fa-sign-out fa-2x logOut" aria-hidden="true" title="Log Out"></i>
+
 
     </section>
     <section class="shoppingListItems">

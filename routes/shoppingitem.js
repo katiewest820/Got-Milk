@@ -40,9 +40,11 @@ router.use((req, res, next) => {
 
 
 
-router.route('/')
+router.route('/getByUser/:id')
     .get(function(req, res) {
-        shoppingLocation.find({})
+        shoppingLocation.find({
+            userId: req.params.id
+        })
             .then(function(items) {
                 res.status(200).json(items);
 
@@ -53,9 +55,11 @@ router.route('/')
             });
     })
 
+router.route('/')
     .post(function(req, res) {
         let newShoppingLocation = new shoppingLocation();
         newShoppingLocation.listName = req.body.listName;
+        newShoppingLocation.userId = req.body.userId;
 
         newShoppingLocation.save()
             .then(function(item) {
