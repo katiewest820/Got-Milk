@@ -72,6 +72,7 @@ input, i, a, button{
 .logOut{
 	position: absolute;
 	right: 7%;
+	bottom: 7%;
 }
 
 .logOut:hover{
@@ -129,6 +130,9 @@ input, i, a, button{
 	margin: 13%;
 }
 
+.createNewList, .shoppingListItems{
+	min-height: 400px;
+}
 .shoppingListHeader{
 	text-align: center;
 	font-size: 25px;
@@ -314,7 +318,6 @@ input, i, a, button{
 	}
 
 	.loginForm{
-		
 		padding: 40px;
 	}
 
