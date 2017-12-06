@@ -5,40 +5,21 @@ const conf = require('../config').JWT_SECRET;
 
 const router = express.Router();
 
-
 router.use((req, res, next) => {
-    // if (req.method == "GET") { 
-    //     next(); 
-    //     return; 
-    // }
-
     const token = req.headers.authorization || req.body.token;
-
     if (!token) {
         res.status(401).json({ message: "unauthorized" });
         return;
     }
-
     jwt.verify(token, conf, (error, decode) => {
         if (error) {
             res.status(500).json({ message: "Token is not valid" });
             return;
         }
-
         req.user = decode;
         next();
     });
 });
-
-// router.use(function(req, res, next) { console.log("route middleware");
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next(); 
-//});
-
-
 
 router.route('/getByUser/:id')
     .get(function(req, res) {
@@ -175,7 +156,6 @@ router.put('/id/:parentId/:id', (req, res) => {
             }
             item.save()
         })
-        //shoppingList.findByIdAndUpdate(req.params.id, { $set: editField }, { new: true })
         .then((item) => {
             console.log('put successful')
 
